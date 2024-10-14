@@ -2,18 +2,17 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { Switch } from "../ui/switch";
 import {
   RiCloseLine,
   RiDeleteBinLine,
   RiEditBoxLine,
   RiFullscreenExitLine,
   RiFullscreenLine,
-  RiImageFill,
+  RiImageLine,
   RiInformationLine,
 } from "@remixicon/react";
 import { ComboboxDemo } from "../ui/combo-box";
-import { tags } from "../../utils/tags";
+// import { tags } from "../../utils/tags";
 import { Button } from "../ui/button";
 import { SignInModal } from "../shared/SignInModal";
 import YooptaTextEditor from "./YooptaEditor";
@@ -23,7 +22,7 @@ export const Form = ({
   title,
   description,
   content,
-  tag,
+  tags,
   image,
   submitLabel,
   onsubmit,
@@ -31,8 +30,6 @@ export const Form = ({
   handleRemoveImage,
   handleToggleImageMode,
   handleChange,
-  handleSelectRandomImage,
-  isImageRequired,
   errors,
   redirectTime,
 }) => {
@@ -54,23 +51,22 @@ export const Form = ({
     title: titleError,
     description: descriptionError,
     content: contentError,
-    tag: tagError,
+    tags: tagError,
     image: imageError,
   } = errors;
 
   /**
    * Check if the form is ready to be submitted
    */
-  const hasEmptyFields = !title || !description || !content || !tag;
+  const hasEmptyFields = !title || !description || !content || !tags.length;
   const hasErrors =
     titleError.hasError ||
     descriptionError.hasError ||
     contentError.hasError ||
     tagError.hasError ||
     imageError.hasError;
-  const isImageMissing = isImageRequired && !image.src;
 
-  const notReadyForSubmit = hasEmptyFields || hasErrors || isImageMissing;
+  const notReadyForSubmit = hasEmptyFields || hasErrors;
 
   /**
    * Auto resize the textarea
@@ -142,17 +138,15 @@ export const Form = ({
                 <div className="flex flex-col gap-1">
                   <ComboboxDemo
                     onSelect={onSelect}
-                    tags={tags}
-                    selectedValue={tag}
+                    selectedValues={tags}
                     error={tagError.hasError}
                   />
                 </div>
                 <div className="flex flex-col gap-1">
                   <div className="flex flex-row items-center gap-2 flex-wrap">
-                    {!image.src && isImageRequired && (
+                    {!image.src && (
                       <Button
                         type="button"
-                        // asChild
                         variant="outline"
                         size="sm"
                         className={`cursor-pointer gap-1 ${
@@ -162,31 +156,9 @@ export const Form = ({
                         }`}
                         onClick={() => setCoverModal(true)}
                       >
+                        <RiImageLine size={18} />
                         Add Cover
                       </Button>
-                    )}
-                    {!image.src && isImageRequired && (
-                      <p className="text-sm uppercase text-center text-zinc-400">
-                        or
-                      </p>
-                    )}
-                    {/* Select Random image */}
-                    {!image.src && (
-                      <div className="flex gap-2 items-center ">
-                        <Switch
-                          aria-label="Select random image instead"
-                          id="switch"
-                          onCheckedChange={handleSelectRandomImage}
-                        />
-                        <label
-                          htmlFor="switch"
-                          className={`text-sm cursor-pointer ${
-                            isImageRequired && "text-muted-foreground"
-                          }`}
-                        >
-                          Random image
-                        </label>
-                      </div>
                     )}
                   </div>
                 </div>
@@ -283,43 +255,14 @@ export const Form = ({
                         </Button>
                       )}
                       <Button
-                        asChild
                         type="button"
                         size="icon"
                         variant="ghost"
                         title="Edit image"
                         className="border-none size-8 cursor-pointer"
+                        onClick={() => setCoverModal(true)}
                       >
-                        <label
-                          tabIndex="0"
-                          htmlFor="changeImage"
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              document.getElementById("image").click();
-                            }
-                          }}
-                        >
-                          <RiEditBoxLine className="fill-white" />
-                          <input
-                            id="changeImage"
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>
-                              handleChange({
-                                target: {
-                                  name: "image",
-                                  value: {
-                                    src: e.target.files[0],
-                                    alt: e.target.files[0].name,
-                                    isInset: true,
-                                  },
-                                },
-                              })
-                            }
-                            hidden
-                          />
-                        </label>
+                        <RiEditBoxLine className="fill-white" />
                       </Button>
                       <Button
                         type="button"
@@ -344,7 +287,7 @@ export const Form = ({
                   )}
                 </div>
               )}
-              <div className="flex flex-col gap-1 w-full pb-6 md:pb-0 pl-16 md:pl-0 px-6 md:px-16 max-w-4xl">
+              <div className="flex flex-col gap-1 w-full pb-12 md:pb-0 pl-16 px-6 md:px-16 max-w-4xl">
                 <YooptaTextEditor
                   handleCharCount={handleCharCount}
                   onChange={(value) =>

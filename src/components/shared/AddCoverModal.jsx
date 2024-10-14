@@ -8,7 +8,6 @@ import {
 } from "../ui/alert-dialog";
 import { RiCloseLine, RiUploadLine } from "@remixicon/react";
 import { useState } from "react";
-import { isValidImageUrl } from "../../utils/isValidImageUrl";
 
 export const AddCoverModal = ({
   onCancel,
@@ -17,26 +16,38 @@ export const AddCoverModal = ({
   handleSubmitUrl,
 }) => {
   const [imageUrl, setImageUrl] = useState("");
+
   /**
-   * Handle the form submission
+   * Handle the image upload from the device
+   * @param {Event} e
+   * @returns void
+   */
+  const handleUpload = (e) => {
+    // upload the image from the device
+    handleChange({
+      target: {
+        name: "image",
+        value: {
+          src: e.target.files[0],
+          alt: e.target.files[0].name,
+          isInset: true,
+        },
+      },
+    });
+    onCancel(); // Close the modal
+  };
+  /**
+   * Handle the form submission of the image URL
    * @param {Event} e
    * @returns void
    */
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    // check if the image URL is empty
     if (!imageUrl) {
       return;
-    } else {
-      isValidImageUrl(imageUrl).then((isValid) => {
-        if (!isValid) {
-          console.log("Invalid image URL");
-
-          return;
-        }
-      });
     }
-
+    // submit the image URL to the parent component
     handleSubmitUrl({
       target: {
         name: "image",
@@ -48,8 +59,8 @@ export const AddCoverModal = ({
       },
     });
 
-    setImageUrl("");
-    onCancel();
+    setImageUrl(""); // Clear the image URL
+    onCancel(); // Close the modal
   };
   return (
     <AlertDialog open={showModal}>
@@ -82,18 +93,7 @@ export const AddCoverModal = ({
                 id="addImage"
                 type="file"
                 accept="image/*"
-                onChange={(e) =>
-                  handleChange({
-                    target: {
-                      name: "image",
-                      value: {
-                        src: e.target.files[0],
-                        alt: e.target.files[0].name,
-                        isInset: true,
-                      },
-                    },
-                  })
-                }
+                onChange={handleUpload}
                 hidden
               />
             </label>
