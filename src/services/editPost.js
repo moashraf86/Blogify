@@ -11,7 +11,7 @@ import { db } from "../utils/firebase";
  * @param {string} postData.image - The updated image URL of the post.
  */
 export const editPost = async (postData) => {
-  const { id, title, content, tag, image } = postData;
+  const { id, title, content, tags, image } = postData;
 
   // Reference to the post document.
   const postRef = doc(db, "posts", id);
@@ -20,8 +20,8 @@ export const editPost = async (postData) => {
   const data = {
     title,
     content,
-    tag,
-    image: image || `https://picsum.photos/seed/${tag}/800/600`,
+    tags,
+    image: image,
   };
 
   // Update the post document.

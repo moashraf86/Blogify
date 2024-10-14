@@ -43,13 +43,15 @@ export const PostsList = ({ title, postsQuery, alertMsg }) => {
     postToDelete
   );
 
+  // track delete mutation progress
+  const { mutate: deletePost, isPending: isDeleting } = handleDeleteMutation;
+
   /**
    * Filter posts based on category
    */
   const handleFilter = (key) => {
     setFilterKey(key);
     setCurrentPage(1);
-    // setTotalPosts(data.totalPosts);
   };
 
   /**
@@ -64,7 +66,7 @@ export const PostsList = ({ title, postsQuery, alertMsg }) => {
    * Handle Delete Post
    */
   const handleDeletePost = () => {
-    handleDeleteMutation.mutate();
+    deletePost();
     setShowModal(false);
   };
 
@@ -113,6 +115,7 @@ export const PostsList = ({ title, postsQuery, alertMsg }) => {
               post={post}
               handleShowModal={() => handleShowModal(post)}
               fetchPosts={posts}
+              isDeleting={isDeleting && postToDelete.id === post.id}
             />
           ))}
         {!isLoading && !isError && !posts.length && (

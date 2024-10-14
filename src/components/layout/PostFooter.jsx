@@ -110,9 +110,9 @@ export const PostFooter = ({ post, comments }) => {
   };
 
   return (
-    <div className="flex justify-between items-center py-3 px-6 border-border w-full max-w-4xl mx-auto mb-6">
+    <div className="flex justify-between items-center py-3 px-6 md:px-10 border-border w-full max-w-4xl mx-auto mb-6">
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" className="overflow-clip size-12">
+        <Button variant="outline" size="icon" className="overflow-clip size-11">
           <Avatar className="flex w-full h-full items-center justify-center">
             <AvatarImage src={authorImage} alt={authorName} />
             <AvatarFallback>
