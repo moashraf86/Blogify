@@ -92,10 +92,8 @@ export const validateTag = (tag) => {
  * @param {boolean} isImageRequired - Whether the image is required or not.
  * @returns {string|boolean} - Returns an error message if validation fails, or true if the image is valid.
  */
-export const validateImage = (image, isImageRequired) => {
-  if (!image && isImageRequired) {
-    return { hasError: true, message: "Image is required" };
-  } else if (image?.size > 1000000) {
+export const validateImage = (image) => {
+  if (image?.size > 1000000) {
     return { hasError: true, message: "Image size must be less than 1MB" };
   }
   return { hasError: false };
@@ -111,7 +109,7 @@ export const validateForm = ({
   title,
   description,
   content,
-  tag,
+  tags,
   image,
   isImageRequired,
   setErrors,
@@ -120,7 +118,7 @@ export const validateForm = ({
     title: validateTitle(title),
     description: validateDescription(description),
     content: validateContent(content),
-    tag: validateTag(tag),
+    tags: validateTag(tags),
     image: validateImage(image, isImageRequired),
   };
   setErrors(validationErrors);

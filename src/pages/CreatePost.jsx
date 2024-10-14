@@ -14,9 +14,8 @@ export const CreatePost = () => {
   const authorImage = currentUser?.photoURL;
   const isGuest = currentUser?.isGuest;
   const navigate = useNavigate();
-  const [isImageRequired, setIsImageRequired] = useState(true);
   const formDataFromLocalStorage = JSON.parse(localStorage.getItem("formData"));
-  const { localTitle, localDescription, localContent, localTag, localImage } =
+  const { localTitle, localDescription, localContent, localTags, localImage } =
     formDataFromLocalStorage || {};
 
   const [formData, setFormData] = useState(
@@ -24,7 +23,7 @@ export const CreatePost = () => {
       title: localTitle || "",
       description: localDescription || "",
       content: localContent || EditorInitialValue,
-      tag: localTag || "",
+      tags: localTags || [],
       image: localImage || {
         src: null,
         alt: "",
@@ -33,12 +32,12 @@ export const CreatePost = () => {
     }
   );
 
-  const { title, description, content, tag, image } = formData;
+  const { title, description, content, tags, image } = formData;
   const [errors, setErrors] = useState({
     title: {},
     description: {},
     content: {},
-    tag: {},
+    tags: {},
     image: {},
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -61,21 +60,15 @@ export const CreatePost = () => {
       }, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [currentUser]);
+    // store formData in localStorage
+    localStorage.setItem("formData", JSON.stringify(formData));
+  }, [currentUser, formData]);
 
   /**
    * Handle Inputs Change
    */
   const handleChange = (e) => {
-    handleFormChange(
-      e,
-      formData,
-      setFormData,
-      isSubmitted,
-      isImageRequired,
-      errors,
-      setErrors
-    );
+    handleFormChange(e, formData, setFormData, isSubmitted, errors, setErrors);
   };
 
   /**
@@ -90,6 +83,10 @@ export const CreatePost = () => {
         isInset: true,
       },
     });
+    setErrors({
+      ...errors,
+      image: {},
+    }); // Clear the image error
   };
 
   /**
@@ -120,9 +117,8 @@ export const CreatePost = () => {
         title,
         description,
         content,
-        tag,
+        tags,
         image,
-        isImageRequired,
         setErrors,
       })
     )
@@ -133,7 +129,7 @@ export const CreatePost = () => {
       title,
       description,
       content: JSON.stringify(content),
-      tag,
+      tags,
       image,
       authorId,
       authorName,
@@ -157,17 +153,14 @@ export const CreatePost = () => {
       title={title}
       description={description}
       content={content}
-      tag={tag}
+      tags={tags}
       image={image}
       submitLabel={"Publish"}
       onsubmit={handleCreatePost}
-      onSelect={(e) => handleChange(e)}
-      // handleImageChange={handleImageChange}
+      onSelect={handleChange}
       handleRemoveImage={handleRemoveImage}
       handleToggleImageMode={handleToggleImageMode}
       handleChange={handleChange}
-      handleSelectRandomImage={() => setIsImageRequired(!isImageRequired)}
-      isImageRequired={isImageRequired}
       errors={errors}
       redirectTime={redirectTime}
     />

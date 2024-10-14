@@ -24,7 +24,7 @@ export const EditPost = () => {
     title: post?.title || "",
     description: post?.description || "",
     content: post ? JSON.parse(post.content) : {},
-    tag: post?.tag || "",
+    tags: post?.tags || [],
     image: post?.image || {
       src: null,
       alt: "",
@@ -32,13 +32,13 @@ export const EditPost = () => {
     },
   });
 
-  const { title, description, content, tag, image } = formData;
+  const { title, description, content, tags, image } = formData;
 
   const [errors, setErrors] = useState({
     title: {},
     description: {},
     content: {},
-    tag: {},
+    tags: {},
     image: {},
   });
 
@@ -112,7 +112,7 @@ export const EditPost = () => {
         title,
         description,
         content,
-        tag,
+        tags,
         image,
         isImageRequired,
         setErrors,
@@ -126,7 +126,7 @@ export const EditPost = () => {
       title,
       description,
       content: JSON.stringify(content),
-      tag,
+      tags,
       image,
     });
 
@@ -144,7 +144,7 @@ export const EditPost = () => {
       title={title}
       description={description}
       content={content}
-      tag={tag}
+      tags={tags}
       image={image}
       submitLabel={"Update"}
       onsubmit={handleEditPost}

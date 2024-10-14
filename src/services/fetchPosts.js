@@ -40,7 +40,7 @@ export const fetchPosts = async (
 
   const filteredQuery =
     filterKey !== "all"
-      ? query(baseQuery, where("tag", "==", filterKey))
+      ? query(baseQuery, where("tags", "array-contains", filterKey))
       : baseQuery;
 
   // Fetch posts for the current page
@@ -64,7 +64,7 @@ export const fetchPosts = async (
       ? query(
           postsQuery.collection,
           orderBy("title", "asc"),
-          where("tag", "==", filterKey)
+          where("tags", "array-contains", filterKey)
         )
       : query(postsQuery.collection, orderBy("title", "asc"));
 

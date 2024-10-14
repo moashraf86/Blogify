@@ -31,7 +31,7 @@ import { useFetchBookmarksCount } from "../../hooks/useFetchBookmarksCount";
 import { addBookmark } from "../../services/addBookmark";
 import { removeBookmark } from "../../services/removeBookmark";
 
-export const PostItem = ({ post, handleShowModal }) => {
+export const PostItem = ({ post, handleShowModal, isDeleting }) => {
   const { currentUser, updateUser, signIn } = useContext(AuthContext);
   const { id: userId } = currentUser || {};
   const { id: postId } = post || {};
@@ -103,8 +103,16 @@ export const PostItem = ({ post, handleShowModal }) => {
   return (
     <div className="flex w-full sm:px-3 mb-6 sm:w-1/2 xl:w-1/3 2xl:w-1/4">
       <div className="relative flex flex-col w-full rounded-t-lg overflow-clip">
+        {isDeleting ? (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-t-lg backdrop-blur-md">
+            <RiLoader4Line
+              size={32}
+              className="animate-spin duration-500 fill-primary"
+            />
+          </div>
+        ) : null}
         {/* Image */}
-        <div className="aspect-video max-h-[270px] bg-gradient-to-r from-zinc-400 to-zinc-800">
+        <div className="h-[270px] max-h-[270px] bg-gradient-to-r from-zinc-400 to-zinc-800">
           <Link to={`/post/${post.id}`}>
             {post.image.src && (
               <img
@@ -116,14 +124,19 @@ export const PostItem = ({ post, handleShowModal }) => {
           </Link>
         </div>
         {/* Content */}
-        <div className="flex flex-col gap-2 py-4 px-4 bg-muted/30 border border-t-0 border-border rounded-b-lg">
-          {/* Tag */}
-          {post.tag && (
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground text-xs font-medium uppercase tracking-widest">
-                {post.tag}
-              </span>
-            </div>
+        <div className="flex flex-col gap-2 py-4 px-4 bg-muted/30 border border-t-0 border-border rounded-b-lg flex-grow">
+          {/* Tags */}
+          {post.tags && (
+            <ul className="flex items-center gap-2">
+              {post.tags.map((tag, i) => (
+                <li
+                  key={i}
+                  className="bg-accent py-1 px-3 rounded-full text-muted-foreground text-xs font-medium uppercase tracking-widest"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
           )}
           {/* Title */}
           <h3 className="text-xl md:text-2xl text-primary font-bold capitalize text-nowrap overflow-clip text-ellipsis">
