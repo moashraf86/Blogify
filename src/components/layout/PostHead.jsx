@@ -13,7 +13,7 @@ export const PostHead = ({ post }) => {
               key={i}
               className="bg-accent py-1 px-3 rounded-full text-muted-foreground text-xs font-medium uppercase tracking-widest"
             >
-              {tag}
+              {tag.label}
             </li>
           ))}
         </ul>
