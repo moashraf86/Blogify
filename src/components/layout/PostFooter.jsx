@@ -28,7 +28,7 @@ import { removeBookmark } from "../../services/removeBookmark";
 import { useFetchBookmarksCount } from "../../hooks/useFetchBookmarksCount";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
-import { calculateReadTime } from "../../utils/calcReadTime";
+import { calcContentSummary } from "../../utils/getPostSummary";
 
 export const PostFooter = ({ post, comments }) => {
   const { currentUser, updateUser, signIn } = useContext(AuthContext);
@@ -40,12 +40,13 @@ export const PostFooter = ({ post, comments }) => {
     authorId,
     createdAt,
     id: postId,
+    content: postContent,
   } = post || {};
   const { isGuest } = currentUser || {};
   const [bookmarkAlert, setBookmarkAlert] = useState(false);
   const [Bookmarking, setBookmarking] = useState(false);
   const [firstName, lastName] = authorName.split(" ") || "";
-  const readTime = calculateReadTime(post?.content);
+  const readTime = calcContentSummary(JSON.parse(postContent) || {}).readTime;
   const [urlCopied, setUrlCopied] = useState(false);
   /**
    *  Get Date from the createdAt timestamp
