@@ -7,7 +7,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+
+import { useTags } from "../../context/TagsProviderContext";
 export const Filter = ({ handleFilter }) => {
+  const { tags } = useTags();
+
   return (
     <Select onValueChange={(value) => handleFilter(value)}>
       <SelectTrigger className="w-[180px]">
@@ -16,11 +20,11 @@ export const Filter = ({ handleFilter }) => {
       <SelectContent>
         <SelectGroup>
           <SelectItem value="all">All</SelectItem>
-          <SelectItem value="web">Web</SelectItem>
-          <SelectItem value="react">React</SelectItem>
-          <SelectItem value="javascript">JavaScript</SelectItem>
-          <SelectItem value="html">HTML</SelectItem>
-          <SelectItem value="css">CSS</SelectItem>
+          {tags.map((tag) => (
+            <SelectItem key={tag.value} value={tag.value}>
+              {tag.label}
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>

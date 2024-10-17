@@ -21,7 +21,7 @@ import {
   Strike,
   Highlight,
 } from "@yoopta/marks";
-import { calcContentChars } from "../../utils/calcContentChars";
+import { calcContentSummary } from "../../utils/getPostSummary";
 
 // Editor marks configuration
 const MARKS = [Bold, Italic, CodeMark, Underline, Strike, Highlight];
@@ -107,20 +107,17 @@ export default function YooptaTextEditor({
    */
   const handleChange = (value) => {
     onChange(value);
+    // Calculate the content summary and pass it to the parent component
+    const wordsCount = calcContentSummary(value).contentWords;
+    const blocksCount = calcContentSummary(value).blocksCount;
+    const readTime = calcContentSummary(value).readTime;
+    if (handleCharCount) {
+      handleCharCount(wordsCount, blocksCount, readTime);
+    }
   };
 
   useEffect(() => {
     editor.on("change", handleChange);
-    /**
-     * Handle the character count
-     * @param {string} content - result of calcContentChars function which is the content length
-     * @returns {void}
-     * Sets the character count state to the length of the content in Form.jsx
-     */
-    if (handleCharCount) {
-      const charLength = calcContentChars(defaultValue).length;
-      handleCharCount(charLength);
-    }
 
     return () => {
       editor.off("change", handleChange);
