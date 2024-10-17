@@ -4,6 +4,8 @@ import { validateForm } from "../utils/validateForm";
 import { Form } from "../components/layout/Form";
 import { editPost } from "../services/editPost";
 import { handleFormChange } from "../utils/handleFormChange";
+import { useTags } from "../context/TagsProviderContext";
+import { syncNewTags } from "../services/syncNewTags";
 export const EditPost = () => {
   // Retrieve post ID from URL parameters
   const { id } = useParams();
@@ -43,6 +45,8 @@ export const EditPost = () => {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const { tags: currentTags } = useTags();
 
   /**
    * Remove form data from local storage on component unmount
@@ -127,8 +131,12 @@ export const EditPost = () => {
       description,
       content: JSON.stringify(content),
       tags,
+      tagsValue: tags.map((tag) => tag.value),
       image,
     });
+
+    // Add new tags to tags collection in Firestore
+    syncNewTags(tags, currentTags);
 
     // Clear form data from local storage
     localStorage.removeItem("formData");

@@ -19,6 +19,7 @@ export const createPost = async (postData) => {
     description,
     content,
     tags,
+    tagsValue,
     image,
     authorId,
     authorName,
@@ -49,6 +50,7 @@ export const createPost = async (postData) => {
     description,
     content,
     tags,
+    tagsValue,
     image: image.src ? image : defaultImage, // Default image if none is provided.
     bookmarksCount: 0,
     authorId,

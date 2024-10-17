@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 "use client";
 
-import * as React from "react";
+import { useEffect, useState } from "react";
 import { RiCheckLine, RiCloseLine, RiHashtag } from "@remixicon/react";
 
 import { cn } from "@/lib/utils";
@@ -19,46 +19,27 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useTags } from "../../context/TagsProviderContext";
 
 export function ComboboxDemo({ onSelect, selectedValues = [], error }) {
-  const initialTags = [
-    {
-      value: "web",
-      label: "Web",
-    },
-    {
-      value: "react",
-      label: "React",
-    },
-    {
-      value: "javascript",
-      label: "JavaScript",
-    },
-    {
-      value: "html",
-      label: "HTML",
-    },
-    {
-      value: "css",
-      label: "CSS",
-    },
-  ];
-  const [open, setOpen] = React.useState(false);
-  const [selectedTags, setSelectedTags] = React.useState(selectedValues || []);
-  const [tags, setTags] = React.useState(initialTags || []);
-  const [newTag, setNewTag] = React.useState("");
-  const [searching, setSearching] = React.useState(false);
+  const { tags: initialTags } = useTags();
+  const [open, setOpen] = useState(false);
+  const [selectedTags, setSelectedTags] = useState(selectedValues || []);
+  const [tags, setTags] = useState(initialTags || []);
+  const [newTag, setNewTag] = useState("");
+  const [searching, setSearching] = useState(false);
 
   /**
    * Handle Value Selection
    */
   const handleSelect = (value) => {
     // SET SELECTED VALUES
+    const selectedTag = tags.find((tag) => tag.value === value);
     setSelectedTags((prev) => {
-      if (prev.includes(value)) {
-        return prev.filter((val) => val !== value);
+      if (prev.includes(selectedTag)) {
+        return prev.filter((tag) => tag !== selectedTag);
       } else {
-        return [...prev, value];
+        return [...prev, selectedTag];
       }
     });
     setOpen(false);
@@ -79,14 +60,15 @@ export function ComboboxDemo({ onSelect, selectedValues = [], error }) {
    * Add New Tag
    */
   const addNewTag = () => {
-    setTags((prev) => [
-      ...prev,
-      {
-        value: newTag,
-        label: newTag,
-      },
-    ]);
-    setSelectedTags((prev) => [...prev, newTag]);
+    const newTagObj = {
+      value: newTag.toLowerCase().replace(/\s+/g, "-"),
+      label: newTag,
+    };
+
+    setTags((prev) => [...prev, newTagObj]);
+
+    setSelectedTags((prev) => [...prev, newTagObj]);
+
     setNewTag("");
     setSearching(false);
     setOpen(false);
@@ -94,7 +76,9 @@ export function ComboboxDemo({ onSelect, selectedValues = [], error }) {
   /**
    * Remove Tag
    */
-  const removeTag = (tag) => {
+  const removeTag = (e, tag) => {
+    // stop the event from propagating
+    e.stopPropagation();
     setSelectedTags((current) => {
       return current.filter((cur) => cur !== tag);
     });
@@ -102,9 +86,10 @@ export function ComboboxDemo({ onSelect, selectedValues = [], error }) {
   /**
    * useEffect to update values on change of selectedTags
    */
-  React.useEffect(() => {
+  useEffect(() => {
+    setTags(initialTags);
     onSelect({ target: { name: "tags", value: selectedTags } });
-  }, [selectedTags]);
+  }, [selectedTags, initialTags]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -129,11 +114,11 @@ export function ComboboxDemo({ onSelect, selectedValues = [], error }) {
                     key={i}
                     className="flex items-center gap-1 bg-muted px-2 rounded-full text-sm text-muted-foreground"
                   >
-                    {tag}
+                    {tag.label}
                     <button
                       aria-label="close"
                       type="button"
-                      onClick={(e) => removeTag(tag)}
+                      onClick={(e) => removeTag(e, tag)}
                     >
                       <RiCloseLine size={16} />
                     </button>
@@ -161,7 +146,7 @@ export function ComboboxDemo({ onSelect, selectedValues = [], error }) {
             }
             <CommandGroup>
               {tags
-                .filter((tag) => !selectedTags.includes(tag.value))
+                .filter((tag) => !selectedTags.includes(tag))
                 .map((tag, i) => {
                   return (
                     <CommandItem

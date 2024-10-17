@@ -126,18 +126,18 @@ export const PostItem = ({ post, handleShowModal, isDeleting }) => {
         {/* Content */}
         <div className="flex flex-col gap-2 py-4 px-4 bg-muted/30 border border-t-0 border-border rounded-b-lg flex-grow">
           {/* Tags */}
-          {post.tags && (
+          {post.tags ? (
             <ul className="flex items-center gap-2">
               {post.tags.map((tag, i) => (
                 <li
                   key={i}
                   className="bg-accent py-1 px-3 rounded-full text-muted-foreground text-xs font-medium uppercase tracking-widest"
                 >
-                  {tag}
+                  {tag.label}
                 </li>
               ))}
             </ul>
-          )}
+          ) : null}
           {/* Title */}
           <h3 className="text-xl md:text-2xl text-primary font-bold capitalize text-nowrap overflow-clip text-ellipsis">
             <Link to={`/post/${post.id}`}>{post.title}</Link>

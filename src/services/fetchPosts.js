@@ -31,49 +31,54 @@ export const fetchPosts = async (
   currentPage,
   setTotalPosts
 ) => {
-  // Create base queries
-  const baseQuery = query(
-    postsQuery.collection,
-    orderBy("title", "asc"),
-    limit(postsPerPage)
-  );
-
-  const filteredQuery =
-    filterKey !== "all"
-      ? query(baseQuery, where("tags", "array-contains", filterKey))
-      : baseQuery;
-
-  // Fetch posts for the current page
-  let postsSnapshot;
-  let totalPostsSnapshot;
-  if (currentPage === 1) {
-    postsSnapshot = await getDocs(filteredQuery);
-  } else {
-    const target = await getTargetSnapShot(
-      postsQuery,
-      currentPage,
-      postsPerPage
+  try {
+    // Create base queries
+    const baseQuery = query(
+      postsQuery.collection,
+      orderBy("title", "asc"),
+      limit(postsPerPage)
     );
-    const paginatedQuery = query(filteredQuery, startAt(target));
-    postsSnapshot = await getDocs(paginatedQuery);
+
+    const filteredQuery =
+      filterKey !== "all"
+        ? query(baseQuery, where("tagsValue", "array-contains", filterKey))
+        : baseQuery;
+
+    // Fetch posts for the current page
+    let postsSnapshot;
+    let totalPostsSnapshot;
+    if (currentPage === 1) {
+      postsSnapshot = await getDocs(filteredQuery);
+    } else {
+      const target = await getTargetSnapShot(
+        postsQuery,
+        currentPage,
+        postsPerPage
+      );
+      const paginatedQuery = query(filteredQuery, startAt(target));
+      postsSnapshot = await getDocs(paginatedQuery);
+    }
+
+    // Determine the total number of posts based on filterKey
+    const totalQuery =
+      filterKey !== "all"
+        ? query(
+            postsQuery.collection,
+            orderBy("title", "asc"),
+            where("tagsValue", "array-contains", filterKey)
+          )
+        : query(postsQuery.collection, orderBy("title", "asc"));
+
+    // Fetch total number of posts for pagination calculations
+    totalPostsSnapshot = await getDocs(query(totalQuery));
+    // Set the total number of posts
+    setTotalPosts(totalPostsSnapshot.docs.length);
+    // Return the fetched posts
+    let posts = postsSnapshot.docs.map((doc) => doc.data());
+
+    return posts;
+  } catch (error) {
+    console.error("Error fetching posts: ", error.message);
+    return [];
   }
-
-  // Determine the total number of posts based on filterKey
-  const totalQuery =
-    filterKey !== "all"
-      ? query(
-          postsQuery.collection,
-          orderBy("title", "asc"),
-          where("tags", "array-contains", filterKey)
-        )
-      : query(postsQuery.collection, orderBy("title", "asc"));
-
-  // Fetch total number of posts for pagination calculations
-  totalPostsSnapshot = await getDocs(query(totalQuery));
-  // Set the total number of posts
-  setTotalPosts(totalPostsSnapshot.docs.length);
-  // Return the fetched posts
-  let posts = postsSnapshot.docs.map((doc) => doc.data());
-
-  return posts;
 };

@@ -6,6 +6,8 @@ import { handleFormChange } from "../utils/handleFormChange";
 import { createPost } from "../services/createPost";
 import { Form } from "../components/layout/Form";
 import { EditorInitialValue } from "../utils/editorInitialValue";
+import { useTags } from "../context/TagsProviderContext";
+import { syncNewTags } from "../services/syncNewTags";
 
 export const CreatePost = () => {
   const { currentUser } = useContext(AuthContext);
@@ -33,6 +35,7 @@ export const CreatePost = () => {
   );
 
   const { title, description, content, tags, image } = formData;
+
   const [errors, setErrors] = useState({
     title: {},
     description: {},
@@ -43,6 +46,8 @@ export const CreatePost = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [redirectTime, setRedirectTime] = useState(5);
+
+  const { tags: currentTags } = useTags();
 
   /**
    * Redirect to the home page if user is not logged in
@@ -60,6 +65,7 @@ export const CreatePost = () => {
       }, 1000);
       return () => clearInterval(intervalId);
     }
+
     // store formData in localStorage
     localStorage.setItem("formData", JSON.stringify(formData));
   }, [currentUser, formData]);
@@ -130,12 +136,16 @@ export const CreatePost = () => {
       description,
       content: JSON.stringify(content),
       tags,
+      tagsValue: tags.map((tag) => tag.value),
       image,
       authorId,
       authorName,
       authorImage,
       isGuest,
     });
+
+    // Add new tags to the tags collection in Firestore
+    syncNewTags(tags, currentTags);
 
     handleRemoveImage; // Remove the selected image
     localStorage.removeItem("formData"); // Remove formData from localStorage

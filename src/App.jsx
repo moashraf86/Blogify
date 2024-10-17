@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ScrollToTop } from "./utils/ScrollToTop";
 import { EditPostSkeleton } from "./components/layout/EditPostSkeleton";
 import { useEffect, useState } from "react";
+import { TagsProvider } from "./context/TagsProviderContext";
 
 const queryClient = new QueryClient();
 export default function App() {
@@ -38,7 +39,9 @@ export default function App() {
               {loading && isNavigateToEditPost && !isPrevEditPost ? (
                 <EditPostSkeleton />
               ) : (
-                <Outlet />
+                <TagsProvider>
+                  <Outlet />
+                </TagsProvider>
               )}
             </CommentsProvider>
           </QueryClientProvider>
