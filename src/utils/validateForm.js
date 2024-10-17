@@ -1,4 +1,4 @@
-import { calcContentChars } from "./calcContentChars";
+import { calcContentSummary } from "./getPostSummary";
 
 /**
  * Validates the title field.
@@ -7,14 +7,14 @@ import { calcContentChars } from "./calcContentChars";
  */
 export const validateTitle = (title) => {
   // min 3 chars, max 60 chars al
-  const minChars = 10;
+  const minChars = 5;
   const maxChars = 100;
   if (!title) {
     return { hasError: true, message: "Title is required" };
   } else if (title.length < minChars) {
     return {
       hasError: true,
-      message: "Title must be at least 10 characters",
+      message: "Title must be at least 5 characters",
     };
   } else if (title.length > maxChars) {
     return {
@@ -31,15 +31,9 @@ export const validateTitle = (title) => {
  * @returns {string|boolean} - Returns an error message if validation fails, or true if the description is valid.
  */
 export const validateDescription = (description) => {
-  const minChars = 10;
   const maxChars = 100;
   if (!description) {
     return { hasError: true, message: "Description is required" };
-  } else if (description.length < minChars) {
-    return {
-      hasError: true,
-      message: "Description must be at least 10 characters",
-    };
   } else if (description.length > maxChars) {
     return {
       hasError: true,
@@ -55,21 +49,10 @@ export const validateDescription = (description) => {
  * @returns {string|boolean} - Returns an error message if validation fails, or true if the content is valid.
  */
 export const validateContent = (content) => {
-  const totalChars = calcContentChars(content);
-  const minChars = 200;
-  const maxChars = 10000;
-  if (!totalChars || totalChars.trim() === "") {
+  const totalWords = calcContentSummary(content).contentWords;
+  // check if there is at least 1 word
+  if (totalWords < 1) {
     return { hasError: true, message: "Content is required" };
-  } else if (totalChars.length < minChars) {
-    return {
-      hasError: true,
-      message: "Content must be at least 200 characters",
-    };
-  } else if (totalChars.length > maxChars) {
-    return {
-      hasError: true,
-      message: "Content must be at most 10000 characters",
-    };
   }
   return { hasError: false };
 };

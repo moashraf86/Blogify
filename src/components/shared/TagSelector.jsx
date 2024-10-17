@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/popover";
 import { useTags } from "../../context/TagsProviderContext";
 
-export function ComboboxDemo({ onSelect, selectedValues = [], error }) {
+export function TagSelector({ onSelect, selectedValues = [], error }) {
   const { tags: initialTags } = useTags();
   const [open, setOpen] = useState(false);
   const [selectedTags, setSelectedTags] = useState(selectedValues || []);

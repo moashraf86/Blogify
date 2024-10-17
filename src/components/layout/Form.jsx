@@ -11,13 +11,12 @@ import {
   RiImageLine,
   RiInformationLine,
 } from "@remixicon/react";
-import { ComboboxDemo } from "../ui/combo-box";
-// import { tags } from "../../utils/tags";
 import { Button } from "../ui/button";
 import { SignInModal } from "../shared/SignInModal";
 import YooptaTextEditor from "./YooptaEditor";
-import { CharCountDisplay } from "../shared/CharCountDisplay";
 import { AddCoverModal } from "../shared/AddCoverModal";
+import { TagSelector } from "../shared/TagSelector";
+import { PostSummary } from "../shared/PostSummary";
 export const Form = ({
   title,
   description,
@@ -37,7 +36,9 @@ export const Form = ({
   const isGuest = currentUser?.isGuest;
   const [signInModal, setSignInModal] = useState(false);
   const [coverModal, setCoverModal] = useState(false);
-  const [charsCount, setCharsCount] = useState(0);
+  const [wordsCount, setWordsCount] = useState(0);
+  const [blocksCount, setBlocksCount] = useState(0);
+  const [readTime, setReadTime] = useState(0);
   const titleRef = useRef(null);
   const descriptionRef = useRef(null);
   /**
@@ -85,8 +86,10 @@ export const Form = ({
    * @returns {void}
    * sets the character count state to the length of the content
    */
-  const handleCharCount = (value) => {
-    setCharsCount(value);
+  const handleCharCount = (words, block, readTime) => {
+    setWordsCount(words);
+    setBlocksCount(block);
+    setReadTime(readTime);
   };
 
   /**
@@ -136,7 +139,7 @@ export const Form = ({
             >
               <div className="flex flex-col items-start sm:flex-row sm:items-center gap-3 w-full px-6 md:px-16 max-w-4xl">
                 <div className="flex flex-col gap-1">
-                  <ComboboxDemo
+                  <TagSelector
                     onSelect={onSelect}
                     selectedValues={tags}
                     error={tagError.hasError}
@@ -162,16 +165,25 @@ export const Form = ({
                     )}
                   </div>
                 </div>
-                {/* Publish Button */}
-                <div className="fixed bottom-0 left-0 right-0 bg-background z-20 py-3 px-6 border-t border-border shadow-sm flex flex-1 justify-end md:static md:p-0 md:border-none md:shadow-none md:bg-none md:z-0">
-                  <Button
-                    size="lg"
-                    type="submit"
-                    className="disabled:opacity-20"
-                    disabled={notReadyForSubmit}
-                  >
-                    {isGuest ? "Save to Drafts" : submitLabel}
-                  </Button>
+                {/* Form Footer */}
+                <div className="fixed bottom-0 left-0 right-0 bg-background z-20 py-3 border-t border-border shadow-sm flex flex-1 justify-end">
+                  <div className="flex items-center justify-between w-full mx-auto max-w-4xl px-6 md:px-16">
+                    {/* Post Summary */}
+                    <PostSummary
+                      words={wordsCount}
+                      blocks={blocksCount}
+                      readTime={readTime}
+                    />
+                    {/* Publish Button */}
+                    <Button
+                      size="lg"
+                      type="submit"
+                      className="disabled:opacity-20"
+                      disabled={notReadyForSubmit}
+                    >
+                      {isGuest ? "Save to Drafts" : submitLabel}
+                    </Button>
+                  </div>
                 </div>
               </div>
               {/* Post Title */}
@@ -303,7 +315,6 @@ export const Form = ({
                 {contentError.hasError && (
                   <p className="text-sm text-danger">{contentError.message}</p>
                 )}
-                <CharCountDisplay charCount={charsCount} maxChars={10000} />
               </div>
             </form>
           </div>
