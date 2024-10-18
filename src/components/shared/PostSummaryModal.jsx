@@ -19,7 +19,7 @@ export const PostSummaryModal = ({ children }) => {
           Post Summary
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-xs px-4 rounded-lg sm:max-w-[425px] sm:px-6">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-start">Post Summary</DialogTitle>
           <DialogDescription className="text-start">
