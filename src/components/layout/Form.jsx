@@ -17,6 +17,7 @@ import YooptaTextEditor from "./YooptaEditor";
 import { AddCoverModal } from "../shared/AddCoverModal";
 import { TagSelector } from "../shared/TagSelector";
 import { PostSummary } from "../shared/PostSummary";
+import { PostSummaryModal } from "../shared/PostSummaryModal";
 export const Form = ({
   title,
   description,
@@ -137,14 +138,12 @@ export const Form = ({
               onSubmit={onsubmit}
               className="flex flex-col gap-4 items-center"
             >
-              <div className="flex flex-col items-start sm:flex-row sm:items-center gap-3 w-full px-6 md:px-16 max-w-4xl">
-                <div className="flex flex-col gap-1">
-                  <TagSelector
-                    onSelect={onSelect}
-                    selectedValues={tags}
-                    error={tagError.hasError}
-                  />
-                </div>
+              <div className="flex items-center flex-wrap gap-6 w-full px-6 md:px-16 max-w-4xl">
+                <TagSelector
+                  onSelect={onSelect}
+                  selectedValues={tags}
+                  error={tagError.hasError}
+                />
                 <div className="flex flex-col gap-1">
                   <div className="flex flex-row items-center gap-2 flex-wrap">
                     {!image.src && (
@@ -152,7 +151,7 @@ export const Form = ({
                         type="button"
                         variant="outline"
                         size="sm"
-                        className={`cursor-pointer gap-1 ${
+                        className={`cursor-pointer gap-1 py-1.5 h-auto rounded-md ${
                           imageError.hasError
                             ? "border-danger text-danger hover:text-danger hover:bg-danger/10"
                             : ""
@@ -167,18 +166,27 @@ export const Form = ({
                 </div>
                 {/* Form Footer */}
                 <div className="fixed bottom-0 left-0 right-0 bg-background z-20 py-3 border-t border-border shadow-sm flex flex-1 justify-end">
-                  <div className="flex items-center justify-between w-full mx-auto max-w-4xl px-6 md:px-16">
-                    {/* Post Summary */}
+                  <div className="flex flex-wrap items-center justify-between w-full mx-auto max-w-4xl px-6 md:px-16 gap-4 sm:gap-0">
+                    {/* Post Summary - Desktop */}
                     <PostSummary
                       words={wordsCount}
                       blocks={blocksCount}
                       readTime={readTime}
+                      className="hidden md:flex"
                     />
+                    {/* Post Summary Modal - Mobile */}
+                    <PostSummaryModal>
+                      <PostSummary
+                        words={wordsCount}
+                        blocks={blocksCount}
+                        readTime={readTime}
+                      />
+                    </PostSummaryModal>
                     {/* Publish Button */}
                     <Button
                       size="lg"
                       type="submit"
-                      className="disabled:opacity-20"
+                      className="disabled:opacity-20 ml-auto md:ml-0"
                       disabled={notReadyForSubmit}
                     >
                       {isGuest ? "Save to Drafts" : submitLabel}
@@ -331,6 +339,7 @@ export const Form = ({
           </Alert>
         </div>
       )}
+      {/* Modals */}
       <SignInModal
         showModal={signInModal}
         onCancel={() => setSignInModal(false)}

@@ -99,7 +99,7 @@ export function TagSelector({ onSelect, selectedValues = [], error }) {
           size="sm"
           role="combobox"
           aria-expanded={open}
-          className={`text-sm justify-start hover:bg-transparent ${
+          className={`text-sm justify-start hover:bg-transparent h-auto py-1.5 rounded-lg max-w-sm ${
             error
               ? "border-danger text-danger hover:text-danger hover:bg-danger/10"
               : ""
@@ -107,12 +107,12 @@ export function TagSelector({ onSelect, selectedValues = [], error }) {
         >
           <RiHashtag size={16} className="mr-2 shrink-0 opacity-70" />
           {selectedTags.length > 0 ? (
-            <ul className="flex gap-1">
+            <ul className="flex gap-1.5 flex-wrap">
               {selectedTags.map((tag, i) => {
                 return (
                   <li
                     key={i}
-                    className="flex items-center gap-1 bg-muted px-2 rounded-full text-sm text-muted-foreground"
+                    className="flex items-center gap-1 bg-muted py-1 px-2 rounded-sm text-sm text-muted-foreground"
                   >
                     {tag.label}
                     <button
