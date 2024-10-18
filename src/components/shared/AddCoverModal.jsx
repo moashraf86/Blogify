@@ -4,6 +4,7 @@ import {
   AlertDialog,
   AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogDescription,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { RiCloseLine, RiUploadLine } from "@remixicon/react";
@@ -68,6 +69,9 @@ export const AddCoverModal = ({
         <AlertDialogTitle className="mb-4 font-semibold text-primary">
           Add Cover Image
         </AlertDialogTitle>
+        <AlertDialogDescription className="hidden">
+          Add a cover image to your post
+        </AlertDialogDescription>
         <div className="flex flex-col items-stretch gap-2">
           <Button
             asChild
@@ -106,7 +110,7 @@ export const AddCoverModal = ({
             <input
               type="url"
               placeholder="Paste Image URL"
-              className="w-full h-11 px-4 text-sm border border-input rounded-md"
+              className="w-full h-11 px-4 text-sm text-input border border-input rounded-md"
               name="image"
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
