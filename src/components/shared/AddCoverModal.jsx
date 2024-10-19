@@ -87,7 +87,7 @@ export const AddCoverModal = ({
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
-                  document.getElementById("image").click();
+                  document.getElementById("addImage").click();
                 }
               }}
             >
