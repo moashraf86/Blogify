@@ -105,7 +105,7 @@ export const Form = ({
     <>
       {/* If user is a guest, show a message to log in with Google to publish posts */}
       {isGuest ? (
-        <div className="container pt-6 px-6 max-w-4xl">
+        <div className="container pt-6 px-6 max-w-5xl">
           <Alert
             variant="info"
             className="flex flex-col gap-4 sm:flex-row justify-between sm:items-center p-4 sm:py-6 sm:px-8 group"
@@ -138,7 +138,7 @@ export const Form = ({
               onSubmit={onsubmit}
               className="flex flex-col gap-4 items-center"
             >
-              <div className="flex items-center flex-wrap gap-6 w-full px-6 md:px-16 max-w-4xl">
+              <div className="flex items-center flex-wrap gap-6 w-full px-6 md:px-16 max-w-5xl">
                 <TagSelector
                   onSelect={onSelect}
                   selectedValues={tags}
@@ -166,7 +166,7 @@ export const Form = ({
                 </div>
                 {/* Form Footer */}
                 <div className="fixed bottom-0 left-0 right-0 bg-background z-20 py-3 border-t border-border shadow-sm flex flex-1 justify-end">
-                  <div className="flex flex-wrap items-center justify-between w-full mx-auto max-w-4xl px-6 md:px-16 gap-4 sm:gap-0">
+                  <div className="flex flex-wrap items-center justify-between w-full mx-auto max-w-5xl px-6 md:px-16 gap-4 sm:gap-0">
                     {/* Post Summary - Desktop */}
                     <PostSummary
                       words={wordsCount}
@@ -195,7 +195,7 @@ export const Form = ({
                 </div>
               </div>
               {/* Post Title */}
-              <div className="flex flex-col gap-1 w-full px-6 md:px-16 max-w-4xl">
+              <div className="flex flex-col gap-1 w-full px-6 md:px-16 max-w-5xl">
                 <textarea
                   ref={titleRef}
                   name="title"
@@ -217,7 +217,7 @@ export const Form = ({
                 )}
               </div>
               {/* Post Description */}
-              <div className="flex flex-col gap-1 w-full px-6 md:px-16 max-w-4xl">
+              <div className="flex flex-col gap-1 w-full px-6 md:px-16 max-w-5xl">
                 <textarea
                   ref={descriptionRef}
                   name="description"
@@ -245,7 +245,7 @@ export const Form = ({
               {image.src && (
                 <div
                   className={`px-6 md:px-16 relative overflow-clip w-full ${
-                    image.isInset ? "max-w-4xl" : "max-w-7xl"
+                    image.isInset ? "max-w-5xl" : "max-w-7xl"
                   }`}
                 >
                   <div className="relative after:absolute after:content-[''] after:inset-0 after:bg-black/50 after:rounded-md after:z-1 after:hidden hover:after:block group">
@@ -307,7 +307,7 @@ export const Form = ({
                   )}
                 </div>
               )}
-              <div className="flex flex-col gap-1 w-full pb-12 md:pb-0 pl-16 px-6 md:px-16 max-w-4xl">
+              <div className="flex flex-col gap-1 w-full pb-12 md:pb-0 pl-16 px-6 md:px-16 max-w-5xl">
                 <YooptaTextEditor
                   handleCharCount={handleCharCount}
                   onChange={(value) =>
