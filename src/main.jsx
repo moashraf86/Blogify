@@ -13,24 +13,46 @@ import "remixicon/fonts/remixicon.css";
 import App from "./App.jsx";
 import "./index.css";
 import { fetchPost } from "./services/fetchPost.js";
+import { SignIn } from "./pages/SignIn.jsx";
+import { PrivateRouter } from "./pages/PrivateRouter.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     errorElement: <NotFound />,
     children: [
-      { path: "/", element: <Posts /> },
+      { path: "/signin", element: <SignIn /> },
+      {
+        path: "/",
+        element: (
+          <PrivateRouter>
+            <Posts />
+          </PrivateRouter>
+        ),
+      },
       {
         path: "/post/:id",
-        element: <Post />,
+        element: (
+          <PrivateRouter>
+            <Post />
+          </PrivateRouter>
+        ),
       },
       {
         path: "/create",
-        element: <CreatePost />,
+        element: (
+          <PrivateRouter>
+            <CreatePost />
+          </PrivateRouter>
+        ),
       },
       {
         path: "/edit/:id",
-        element: <EditPost />,
+        element: (
+          <PrivateRouter>
+            <EditPost />
+          </PrivateRouter>
+        ),
         loader: async ({ params }) => {
           const postId = params.id;
           const post = await fetchPost(postId);
@@ -42,20 +64,36 @@ const router = createBrowserRouter([
       },
       {
         path: "/bookmarks",
-        element: <Bookmarks />,
+        element: (
+          <PrivateRouter>
+            <Bookmarks />
+          </PrivateRouter>
+        ),
         loader: () => import("./pages/Bookmarks.jsx"),
       },
       {
         path: "/my-posts",
-        element: <MyPosts />,
+        element: (
+          <PrivateRouter>
+            <MyPosts />
+          </PrivateRouter>
+        ),
       },
       {
         path: "/drafts",
-        element: <MyPosts />,
+        element: (
+          <PrivateRouter>
+            <MyPosts />
+          </PrivateRouter>
+        ),
       },
       {
         path: "/users/:id",
-        element: <UserProfile />,
+        element: (
+          <PrivateRouter>
+            <UserProfile />
+          </PrivateRouter>
+        ),
       },
     ],
   },
