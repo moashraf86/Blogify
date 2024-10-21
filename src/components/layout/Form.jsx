@@ -12,12 +12,12 @@ import {
   RiInformationLine,
 } from "@remixicon/react";
 import { Button } from "../ui/button";
-import { SignInModal } from "../shared/SignInModal";
 import YooptaTextEditor from "./YooptaEditor";
 import { AddCoverModal } from "../shared/AddCoverModal";
 import { TagSelector } from "../shared/TagSelector";
 import { PostSummary } from "../shared/PostSummary";
 import { PostSummaryModal } from "../shared/PostSummaryModal";
+import { GoogleIcon } from "../shared/GoogleIcon";
 export const Form = ({
   title,
   description,
@@ -33,9 +33,8 @@ export const Form = ({
   errors,
   redirectTime,
 }) => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, signIn } = useContext(AuthContext);
   const isGuest = currentUser?.isGuest;
-  const [signInModal, setSignInModal] = useState(false);
   const [coverModal, setCoverModal] = useState(false);
   const [wordsCount, setWordsCount] = useState(0);
   const [blocksCount, setBlocksCount] = useState(0);
@@ -108,24 +107,27 @@ export const Form = ({
         <div className="container pt-6 px-6 max-w-5xl">
           <Alert
             variant="info"
-            className="flex flex-col gap-4 sm:flex-row justify-between sm:items-center p-4 sm:py-6 sm:px-8 group"
+            className="flex flex-col gap-4 sm:flex-row justify-between sm:items-center p-4 sm:py-6 sm:px-8"
           >
             <div className="flex gap-3">
               <RiInformationLine className="text-lg min-w-6" />
               <div className="flex flex-col">
                 <AlertTitle>Action Required</AlertTitle>
                 <AlertDescription>
-                  Log in with Google to publish your posts.
+                  Sign in with Google to publish your posts.
                 </AlertDescription>
               </div>
             </div>
-            <Button size="lg" onClick={() => setSignInModal(true)}>
-              Sign In
-            </Button>
-            <button
-              className="absolute top-3 right-3 hidden group-hover:inline"
-              onClick={hideAlert}
+            <Button
+              size="lg"
+              variant="default"
+              className="md:text-base flex gap-[10px] h-11"
+              onClick={signIn}
             >
+              <GoogleIcon />
+              Sign in with Google
+            </Button>
+            <button className="absolute top-3 right-3" onClick={hideAlert}>
               <RiCloseLine />
             </button>
           </Alert>
@@ -340,10 +342,6 @@ export const Form = ({
         </div>
       )}
       {/* Modals */}
-      <SignInModal
-        showModal={signInModal}
-        onCancel={() => setSignInModal(false)}
-      />
       <AddCoverModal
         showModal={coverModal}
         onCancel={() => setCoverModal(false)}

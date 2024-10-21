@@ -10,17 +10,6 @@ import {
   RiLoader4Line,
   RiShareForwardLine,
 } from "@remixicon/react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "../ui/alert-dialog";
-import { GoogleIcon } from "../shared/GoogleIcon";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatTimestamp } from "../../utils/formatTimestamp";
 import { addBookmark } from "../../services/addBookmark";
@@ -29,6 +18,7 @@ import { useFetchBookmarksCount } from "../../hooks/useFetchBookmarksCount";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "../ui/button";
 import { calcContentSummary } from "../../utils/getPostSummary";
+import { SignInModal } from "../shared/SignInModal";
 
 export const PostFooter = ({ post, comments }) => {
   const { currentUser, updateUser, signIn } = useContext(AuthContext);
@@ -243,29 +233,11 @@ export const PostFooter = ({ post, comments }) => {
         )}
       </div>
       {/* Sign In to Bookmark alert */}
-      <AlertDialog open={bookmarkAlert}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Want to bookmark this post?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Sign in with Google to save it to your account and access it
-              anytime!
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setBookmarkAlert(false)}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="md:text-base flex gap-[10px]"
-              onClick={() => handleGoogleSignIn()}
-            >
-              <GoogleIcon />
-              Sign in with Google
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <SignInModal
+        showModal={bookmarkAlert}
+        onCancel={() => setBookmarkAlert(false)}
+        handleGoogleSignIn={handleGoogleSignIn}
+      />
     </div>
   );
 };

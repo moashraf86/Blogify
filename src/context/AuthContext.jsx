@@ -128,10 +128,8 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       if (currentUser) {
         /**
-         * - if there's signed in users, sign Them out
-         * - delete Guest users data from firebase
+         * - if there's signed in users, delete Guest users data from firebase
          */
-        signOut();
         deleteGuestUsers();
       }
       // sign in with Google

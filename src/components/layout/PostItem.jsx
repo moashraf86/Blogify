@@ -15,21 +15,11 @@ import {
   RiLoader4Line,
   RiMore2Fill,
 } from "@remixicon/react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "../ui/alert-dialog";
-import { GoogleIcon } from "../shared/GoogleIcon";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFetchBookmarksCount } from "../../hooks/useFetchBookmarksCount";
 import { addBookmark } from "../../services/addBookmark";
 import { removeBookmark } from "../../services/removeBookmark";
+import { SignInModal } from "../shared/SignInModal";
 
 export const PostItem = ({ post, handleShowModal, isDeleting }) => {
   const { currentUser, updateUser, signIn } = useContext(AuthContext);
@@ -246,31 +236,11 @@ export const PostItem = ({ post, handleShowModal, isDeleting }) => {
                 </DropdownMenu>
               )}
               {/* Sign in to bookmark alert */}
-              <AlertDialog open={bookmarkAlert}>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Want to bookmark this post?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Sign in with Google to save it to your account and access
-                      it anytime!
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel onClick={() => setBookmarkAlert(false)}>
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      className="md:text-base flex gap-[10px]"
-                      onClick={() => handleGoogleSignIn()}
-                    >
-                      <GoogleIcon />
-                      Sign in with Google
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <SignInModal
+                showModal={bookmarkAlert}
+                onCancel={() => setBookmarkAlert(false)}
+                handleGoogleSignIn={handleGoogleSignIn}
+              />
             </div>
           </div>
         </div>

@@ -279,7 +279,7 @@
 }
 
 .yoopta-paragraph {
-  @apply text-xl mb-6 text-primary/80 !important;
+  @apply text-lg md:text-xl mb-6 !important;
 }
 
 .yoopta-placeholder:after {
@@ -353,7 +353,7 @@
 
 /* BlockQuote */
 .yoopta-blockquote {
-  @apply border-l-border italic !important;
+  @apply border-l-border italic mb-6 !important;
 }
 
 /* Divider */
@@ -467,5 +467,5 @@ div:has(.yoopta-link-tool) {
 /* Bullet list */
 .yoopta-bulleted-list,
 .yoopta-numbered-list {
-  @apply text-xl mb-3 !important;
+  @apply text-lg md:text-xl mb-3 !important;
 }
