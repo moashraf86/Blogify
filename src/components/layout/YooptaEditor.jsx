@@ -125,7 +125,7 @@ export default function YooptaTextEditor({
   }, [editor, defaultValue]);
 
   return (
-    <div className="pb-20 flex justify-center" ref={selectionRef}>
+    <div className="flex justify-center" ref={selectionRef}>
       <YooptaEditor
         style={editorStyle}
         editor={editor}

@@ -42,6 +42,6 @@ export const addComment = async (commentData) => {
 
   // Increment the post's comment count.
   await updateDoc(postRef, {
-    commentsCount: postSnap.data.commentsCount + 1,
+    commentsCount: postSnap.data().commentsCount + 1,
   });
 };

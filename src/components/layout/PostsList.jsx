@@ -1,21 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useState, lazy, Suspense } from "react";
+import { useState } from "react";
 import { PostItem } from "./PostItem";
 import { Pagination } from "../shared/Pagination";
 import { Filter } from "../shared/Filter";
 import { Alert, AlertTitle, AlertDescription } from "../ui/alert";
-import { Skeleton } from "../ui/skeleton";
 import { RiErrorWarningLine, RiInformationLine } from "@remixicon/react";
 import { useFetchedPosts } from "../../hooks/useFetchPosts";
-
-/**
- * Lazy load ConfirmDeleteModal
- */
-const ConfirmDeleteModal = lazy(() =>
-  import("../shared/ConfirmDeleteModal").then((module) => ({
-    default: module.ConfirmDeleteModal,
-  }))
-);
+import { PostListSkeleton } from "./PostListSkeleton";
+import { ConfirmDeleteModal } from "../shared/ConfirmDeleteModal";
 
 export const PostsList = ({ title, postsQuery, alertMsg }) => {
   const [showModal, setShowModal] = useState(false);
@@ -23,7 +15,7 @@ export const PostsList = ({ title, postsQuery, alertMsg }) => {
   const [totalPosts, setTotalPosts] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterKey, setFilterKey] = useState("all");
-  const postsPerPage = 3;
+  const postsPerPage = 2;
 
   /**
    * Destructuring the posts, isLoading, isError and error from the custom hook
@@ -89,25 +81,7 @@ export const PostsList = ({ title, postsQuery, alertMsg }) => {
         </div>
       </div>
       <div className="container px-5 flex justify-start flex-wrap">
-        {isLoading &&
-          Array.from({ length: 4 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex flex-col gap-3 sm:px-3 w-full sm:w-1/2 xl:w-1/4 "
-            >
-              <div className="bg-muted/30 border border-border rounded-md mb-6">
-                <Skeleton className="w-full aspect-video rounded-br-none rounded-bl-none" />
-                <div className="flex flex-col gap-3 p-4">
-                  <Skeleton className="w-20 h-4" />
-                  <Skeleton className="w-full h-6 mb-2" />
-                  <Skeleton className="w-full h-3" />
-                  <Skeleton className="w-3/4 h-3" />
-                  <Skeleton className="w-1/2 h-3" />
-                  <Skeleton className="w-32 h-4 mt-3" />
-                </div>
-              </div>
-            </div>
-          ))}
+        {isLoading && <PostListSkeleton />}
         {posts &&
           posts.map((post) => (
             <PostItem
@@ -140,14 +114,11 @@ export const PostsList = ({ title, postsQuery, alertMsg }) => {
         postsPerPage={postsPerPage}
         handleCurrentPage={handleCurrentPage}
       />
-      {/* Confirm Delete Dialog */}
-      <Suspense>
-        <ConfirmDeleteModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          handleDeletePost={handleDeletePost}
-        />
-      </Suspense>
+      <ConfirmDeleteModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        handleDeletePost={handleDeletePost}
+      />
     </div>
   );
 };

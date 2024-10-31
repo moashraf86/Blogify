@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { CommentForm } from "./CommentForm";
 import { CommentList } from "./CommentList";
@@ -8,7 +8,7 @@ import { addComment } from "../../services/addComment";
 import { validateComment } from "../../utils/validateForm";
 import { editComment } from "../../services/editComment";
 import { deleteComment } from "../../services/deleteComment";
-import { scrollToForm } from "../../utils/scrollToForm";
+import { useLocation } from "react-router-dom";
 
 export const Comments = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
@@ -19,6 +19,8 @@ export const Comments = ({ post }) => {
   const { id: postId } = post || {};
   const commentHasChanged = commentToEdit?.content !== comment;
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const location = useLocation();
+
   /**
    * Refetch the comments after Adding, Editing or Deleting a new comment
    */
@@ -80,7 +82,6 @@ export const Comments = ({ post }) => {
   const handleToEdit = (toEdit) => {
     setCommentToEdit(toEdit);
     setComment(toEdit.content);
-    scrollToForm(formRef); // scroll to the form
   };
 
   /**
@@ -120,6 +121,23 @@ export const Comments = ({ post }) => {
     deleteComment({ comment, post }); // delete the comment
     refetchComments(); // refetch the comments
   };
+
+  useEffect(() => {
+    // focus on form textarea if the URL has #comments
+    if (location.hash === "#comments" && formRef.current) {
+      formRef.current.focus();
+      setTimeout(() => {
+        formRef.current.scrollIntoView({ behavior: "smooth" });
+      }, 200);
+    }
+  }, [location.hash]);
+
+  useEffect(() => {
+    // focus on form textarea when editing a comment
+    if (commentToEdit) {
+      formRef.current.focus();
+    }
+  }, [commentToEdit]);
 
   return (
     <div className="w-full max-w-4xl mx-auto px-6 md:px-10">

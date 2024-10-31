@@ -19,7 +19,8 @@ export const deleteComment = async (commentData) => {
 
   // Retrieve the post and update the comments count.
   const postSnap = await getDoc(postRef);
+
   await updateDoc(postRef, {
-    commentsCount: postSnap.data().commentsCount - 1,
+    commentsCount: Math.max(postSnap.data().commentsCount - 1, 0),
   });
 };
