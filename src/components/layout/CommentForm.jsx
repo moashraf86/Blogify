@@ -14,18 +14,20 @@ export const CommentForm = ({
 }) => {
   const isGuest = currentUser?.isGuest;
   return (
-    <div ref={formRef}>
+    <div>
       <label
-        htmlFor="comment"
+        htmlFor="commentForm"
         className="inline-block text-primary font-bold text-xl mb-6"
       >
         Write a Comment
       </label>
       <form onSubmit={handleSubmit} className="flex flex-col gap-3 flex-1">
         <textarea
+          tabIndex={0}
+          ref={formRef}
           className="w-full p-3 text-primary border border-input bg-transparent rounded-lg shadow-sm focus:ring-0 focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-          name="comment"
-          id="comment"
+          name="commentForm"
+          id="commentForm"
           rows={4}
           placeholder={
             isGuest || !currentUser ? "Sign in to comment" : "Write a comment"
