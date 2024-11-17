@@ -70,7 +70,7 @@ export const Form = ({
     <>
       {isGuest ? <SignInAlert signIn={signIn} /> : null}
       <div className="flex justify-center items-center max-w-7xl mx-auto">
-        <div className="flex flex-col w-full bg-background rounded-md py-6 gap-4 mt-6">
+        <div className="flex flex-col w-full bg-background rounded-md pt-6 pb-6 md:pb-20 gap-4">
           <form
             onSubmit={onsubmit}
             className="flex flex-col gap-4 items-center"
